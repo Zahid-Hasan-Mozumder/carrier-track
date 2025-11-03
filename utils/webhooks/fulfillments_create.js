@@ -2,12 +2,12 @@
 // `createwebhook` to generate webhook boilerplate
 
 /**
- * @typedef { import("@/_developer/types/2025-04/webhooks.js").APP_UNINSTALLED} AppUninstalled
+ * @typedef { import("@/_developer/types/2025-04/webhooks.js").FULFILLMENTS_CREATE} FulfillmentsCreate
  */
 
 import prisma from "../prisma.js";
 
-const appUninstallHandler = async (
+const fulfillmentsCreateHandler = async (
   topic,
   shop,
   webhookRequestBody,
@@ -15,20 +15,14 @@ const appUninstallHandler = async (
   apiVersion
 ) => {
   try {
-    /** @type {AppUninstalled} */
+    /** @type {FulfillmentsCreate} */
     const webhookBody = JSON.parse(webhookRequestBody);
     
     console.log("webhookBody", webhookBody);
 
-    await prisma.session.deleteMany({ where: { shop } });
-    await prisma.stores.upsert({
-      where: { shop: shop },
-      update: { isActive: false },
-      create: { shop: shop, isActive: false },
-    });
   } catch (e) {
     console.error(e);
   }
 };
 
-export default appUninstallHandler;
+export default fulfillmentsCreateHandler;

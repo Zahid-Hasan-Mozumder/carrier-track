@@ -9,6 +9,9 @@
 
 import shopify from "@/utils/shopify.js";
 import appUninstallHandler from "@/utils/webhooks/app_uninstalled.js";
+import fulfillmentsCreateHandler from "@/utils/webhooks/fulfillments_create.js";
+
+
 
 async function buffer(readable) {
   const chunks = [];
@@ -47,6 +50,15 @@ export default async function handler(req, res) {
     switch (validateWebhook.topic) {
       case "APP_UNINSTALLED":
         await appUninstallHandler(
+          validateWebhook.topic,
+          shop,
+          rawBody,
+          webhookId,
+          apiVersion
+        );
+        break;
+      case "FULFILLMENTS_CREATE":
+        await fulfillmentsCreateHandler(
           validateWebhook.topic,
           shop,
           rawBody,
