@@ -22,9 +22,10 @@ const fulfillmentsCreateHandler = async (
     console.log("webhookBody", webhookBody);
 
     // Use offline admin client for webhooks (no req/res in handlers)
-    const { client } = await clientProvider.offline.graphqlClient({ shop });
     const fulfillmentId = webhookBody.id;
     console.log("fulfillmentId", fulfillmentId);
+    
+    const { client } = await clientProvider.offline.graphqlClient({ shop });
     const response = await client.request(
       `
         mutation fulfillmentEventCreate($fulfillmentEvent: FulfillmentEventInput!) {
@@ -46,8 +47,8 @@ const fulfillmentsCreateHandler = async (
         variables: {
           fulfillmentEvent: {
             fulfillmentId: `gid://shopify/Fulfillment/${fulfillmentId}`,
-            status: "IN_TRANSIT",
-            message: "Package is now in transit",
+            status: "FAILURE", // ["IN_TRANSIT", "OUT_FOR_DELIVERY", "DELIVERED", "ATTEMPTED_DELIVERY", "FAILURE"]
+            message: "Package is delivery failed",
             happenedAt: new Date().toISOString(),
           },
         },
