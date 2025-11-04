@@ -17,7 +17,7 @@ const appUninstallHandler = async (
   try {
     /** @type {AppUninstalled} */
     const webhookBody = JSON.parse(webhookRequestBody);
-    
+
     console.log("webhookBody", webhookBody);
 
     await prisma.session.deleteMany({ where: { shop } });

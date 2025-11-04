@@ -11,8 +11,6 @@ import shopify from "@/utils/shopify.js";
 import appUninstallHandler from "@/utils/webhooks/app_uninstalled.js";
 import fulfillmentsCreateHandler from "@/utils/webhooks/fulfillments_create.js";
 
-
-
 async function buffer(readable) {
   const chunks = [];
   for await (const chunk of readable) {

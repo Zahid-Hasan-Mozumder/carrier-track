@@ -3,7 +3,7 @@ const AppBridgeProvider = ({ children }) => {
     const shop = window?.shopify?.config?.shop;
 
     if (!shop) {
-      return <p>No Shop Provided</p>;
+      return <h1>Hello, from Zahid Hasan Mozumder!</h1>;
     }
   }
 
