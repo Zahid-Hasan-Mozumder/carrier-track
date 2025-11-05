@@ -11,11 +11,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model stores {
-  shop     String   @id
-  isActive Boolean? @default(false)
+enum FulfillmentStatus {
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  ATTEMPTED_DELIVERY
+  FAILURE
+}
 
+model stores {
+  id        String   @id @default(uuid())
+  shop      String   @unique
+  isActive  Boolean? @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fulfillments fulfillments[]
+
+  @@index([id])
   @@index([shop])
+}
+
+model carriers {
+  id          String   @id @default(uuid())
+  carrierName String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  fulfillments fulfillments[]
+
+  @@index([id])
+  @@index([carrierName])
+}
+
+model fulfillments {
+  id             String            @id @default(uuid())
+  fulfillmentId  String            @unique
+  orderId        String
+  trackingNumber String
+  trackingUrl    String
+  status         FulfillmentStatus
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  storeId   String
+  carrierId String
+
+  store   stores   @relation(fields: [storeId], references: [id])
+  carrier carriers @relation(fields: [carrierId], references: [id])
+
+  lineItems fulfillmentLineItems[]
+
+  @@index([id])
+  @@index([fulfillmentId])
+}
+
+model fulfillmentLineItems {
+  id            String   @id @default(uuid())
+  productId     String
+  title         String
+  variantId     String
+  variantTitle  String?
+  sku           String?
+  quantity      Int
+  grams         Float
+  price         String
+  totalDiscount String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  fulfillmentId String
+
+  fulfillment fulfillments @relation(fields: [fulfillmentId], references: [id])
+
+  @@index([id])
 }
 
 model session {
