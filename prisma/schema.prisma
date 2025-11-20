@@ -12,10 +12,15 @@ datasource db {
 }
 
 enum FulfillmentStatus {
+  LABEL_PURCHASED
+  LABEL_PRINTED
+  READY_FOR_PICKUP
+  CONFIRMED
   IN_TRANSIT
   OUT_FOR_DELIVERY
-  DELIVERED
   ATTEMPTED_DELIVERY
+  DELAYED
+  DELIVERED
   FAILURE
 }
 
@@ -64,6 +69,7 @@ model fulfillments {
 
   @@index([id])
   @@index([fulfillmentId])
+  @@index([trackingNumber])
 }
 
 model fulfillmentLineItems {
